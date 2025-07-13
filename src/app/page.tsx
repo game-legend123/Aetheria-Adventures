@@ -253,11 +253,11 @@ export default function HomePage() {
         <Button 
             onClick={() => setGuideOpen(true)} 
             variant="outline"
-            size="icon"
-            className="absolute bottom-4 right-4 h-12 w-12 rounded-full shadow-lg bg-secondary/50 hover:bg-secondary border-primary/20"
+            size="lg"
+            className="absolute bottom-4 right-4 h-12 rounded-full shadow-lg bg-secondary/50 hover:bg-secondary border-primary/20"
             >
             <BookOpen className="h-6 w-6" />
-            <span className="sr-only">Mở Hướng dẫn</span>
+            <span>Hướng dẫn</span>
         </Button>
     </main>
   );
