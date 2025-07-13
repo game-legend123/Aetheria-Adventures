@@ -33,6 +33,12 @@ export async function startAdventure(data: { prompt: string }) {
   }
 }
 
+// Helper function to be called from the main page when system chat wants to reset the story
+export async function startNewAdventureFromSystem(data: { prompt: string }) {
+   return startAdventure(data);
+}
+
+
 const progressAdventureSchema = z.object({
   previousScene: z.string(),
   playerChoice: z.string(),
@@ -105,6 +111,6 @@ export async function chatWithSystem(data: {
             return { success: false, error: fromZodError(error).toString() };
         }
         console.error("Lỗi khi trò chuyện với hệ thống:", error);
-        return { success: false, error: "Không thể trò chuyện với hệ thống. Vui lòng thử lại." };
+        return { success: false, error: "Không thể trò chuyện với hệ thống. Vui lòng thử lại sau." };
     }
 }

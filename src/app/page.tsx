@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
-import { startAdventure, progressAdventure, chatWithSystem } from "@/app/actions";
+import { startAdventure, progressAdventure, chatWithSystem, startNewAdventureFromSystem } from "@/app/actions";
 import { PlayerStatus } from "@/components/game/player-status";
 import { AdventureLog } from "@/components/game/adventure-log";
 import { ActionInput } from "@/components/game/action-input";
@@ -11,7 +11,7 @@ import { PromptScreen } from "@/components/game/prompt-screen";
 import { GameOverScreen } from "@/components/game/game-over-screen";
 import { SystemChat } from "@/components/game/system-chat";
 import { Button } from "@/components/ui/button";
-import { Bot, Wand2 } from "lucide-react";
+import { Wand2 } from "lucide-react";
 
 
 export type Message = {
@@ -49,7 +49,7 @@ export default function HomePage() {
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
     setHp(100);
     setScore(0);
-    setSkills("Thuyết phục, Điều tra, Cảm nhận động cơ");
+    setSkills("Chưa có kỹ năng nào.");
     setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
@@ -158,7 +158,36 @@ export default function HomePage() {
     });
 
     if (result.success) {
-      if (result.stateUpdates) {
+      // Handle story reset
+      if (result.stateUpdates?.newStoryPrompt) {
+        setGameState("loading");
+        setSystemChatOpen(false); // Close the chat window
+        setMessages([{sender: "system", text: `Đã đặt lại câu chuyện. Lời nhắc mới: ${result.stateUpdates.newStoryPrompt}`}]);
+        
+        const newStoryResult = await startNewAdventureFromSystem({ prompt: result.stateUpdates.newStoryPrompt });
+
+        if (newStoryResult.success) {
+          setHp(100);
+          setScore(0);
+          setInventory("Trang bị được làm mới.");
+          setSkills(newStoryResult.initialSkills!);
+          setQuestTitle(newStoryResult.questTitle!);
+          setQuestObjective(newStoryResult.questObjective!);
+          setSceneImageUrl(newStoryResult.imageUrl || null);
+          lastSceneRef.current = newStoryResult.sceneDescription!;
+          setMessages(prev => [...prev, { sender: "bot", text: newStoryResult.sceneDescription! }]);
+          setGameState("playing");
+        } else {
+           toast({
+            variant: "destructive",
+            title: "Lỗi Hệ thống",
+            description: "Không thể bắt đầu câu chuyện mới. Vui lòng thử lại.",
+          });
+          setGameState("playing"); // Or prompt
+        }
+
+      // Handle normal state updates
+      } else if (result.stateUpdates) {
         setHp(result.stateUpdates.hp);
         setSkills(result.stateUpdates.skills);
         setInventory(result.stateUpdates.inventory);
