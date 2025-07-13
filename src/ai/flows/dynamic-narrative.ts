@@ -61,11 +61,11 @@ CƠ CHẾ TRÒ CHƠI CỐT LÕI: XÚC XẮC VÔ HÌNH
 
 QUY TẮC CHIẾN THẮNG, THẤT BẠI, NHIỆM VỤ VÀ TÍNH ĐIỂM:
 -   **Nhiệm vụ:** Người chơi luôn có một nhiệm vụ. Hãy đánh giá xem hành động của người chơi có hoàn thành mục tiêu nhiệm vụ hiện tại không.
--   **Hoàn thành nhiệm vụ:** Khi mục tiêu được hoàn thành, đặt questCompleted thành true. Mô tả sự thành công trong câu chuyện. Thưởng cho người chơi 100 điểm. Sau đó, tạo ra một nhiệm vụ tiếp theo (newQuestTitle và newQuestObjective) để tiếp tục câu chuyện.
+-   **Hoàn thành nhiệm vụ:** Khi mục tiêu được hoàn thành, đặt questCompleted thành true. Trong sceneDescription, hãy mô tả sự thành công đó. Thưởng cho người chơi 100 điểm. Sau đó, BẮT BUỘC phải tạo ra một nhiệm vụ tiếp theo (newQuestTitle và newQuestObjective) để câu chuyện tiếp tục, trừ khi người chơi đã thắng cả trò chơi.
 -   **Chiến thắng:** Người chơi thắng khi hoàn thành nhiệm vụ cuối cùng (ví dụ: "Đánh bại Chúa tể Bóng tối và phục hồi Trái tim Bình minh"). Khi điều này xảy ra, hãy mô tả cảnh chiến thắng huy hoàng, đặt gameHasEnded thành true, isVictory thành true, và questCompleted thành true.
 -   **Thất bại:** Người chơi thua khi Máu (HP) của họ giảm xuống 0 hoặc thấp hơn. Mô tả cảnh thất bại, đặt gameHasEnded thành true và isVictory thành false.
 -   **Tính điểm:**
-    -   Hoàn thành nhiệm vụ: +100 điểm.
+    -   Hoàn thành nhiệm vụ: +100 điểm (bạn phải cộng số điểm này vào updatedScore).
     -   Hành động thành công vang dội: +20 điểm.
     -   Hành động thành công: +10 điểm.
     -   Thành công với giá phải trả: +5 điểm.
@@ -117,12 +117,6 @@ const generateNextSceneFlow = ai.defineFlow(
     }
   
     const {output} = await prompt(input);
-    
-    // The prompt handles adding score for successful actions.
-    // We add the quest completion bonus here.
-    if(output!.questCompleted) {
-        output!.updatedScore += 100;
-    }
 
     return output!;
   }
