@@ -17,7 +17,7 @@ const GenerateAdventureFromPromptInputSchema = z.object({
 export type GenerateAdventureFromPromptInput = z.infer<typeof GenerateAdventureFromPromptInputSchema>;
 
 const GenerateAdventureFromPromptOutputSchema = z.object({
-  adventureText: z.string().describe('The generated adventure text based on the prompt.'),
+  adventureText: z.string().describe('The generated adventure text based on the prompt. This should be the opening scene.'),
 });
 export type GenerateAdventureFromPromptOutput = z.infer<typeof GenerateAdventureFromPromptOutputSchema>;
 
@@ -29,7 +29,14 @@ const prompt = ai.definePrompt({
   name: 'generateAdventureFromPromptPrompt',
   input: {schema: GenerateAdventureFromPromptInputSchema},
   output: {schema: GenerateAdventureFromPromptOutputSchema},
-  prompt: `Bạn là một chatbot kể chuyện sẽ tạo ra một cuộc phiêu lưu dựa trên mô tả do người dùng cung cấp. TOÀN BỘ PHẢN HỒI CỦA BẠN PHẢI BẰNG TIẾNG VIỆT.\nLời nhắc của người dùng: {{{prompt}}}\n\nTạo phần đầu của một trò chơi phiêu lưu dựa trên văn bản dựa trên lời nhắc của người dùng. Cuộc phiêu lưu phải bao gồm mô tả về bối cảnh, nhân vật người chơi và một nhiệm vụ hoặc mục tiêu ban đầu. Cung cấp cuộc phiêu lưu ở định dạng hội thoại, trong đó chatbot mô tả cảnh và sau đó cung cấp cho người chơi 3-4 lựa chọn cho hành động tiếp theo của họ. Đảm bảo nội dung được tạo ra hấp dẫn và lôi cuốn, tạo tiền đề cho trải nghiệm trò chơi năng động và được cá nhân hóa.`,
+  prompt: `Bạn là một quản trò bậc thầy, người sẽ tạo ra một cuộc phiêu lưu hấp dẫn dựa trên mô tả của người dùng. TOÀN BỘ PHẢN HỒI CỦA BẠN PHẢI BẰNG TIẾNG VIỆT.
+
+Lời nhắc của người dùng: {{{prompt}}}
+
+Tạo ra một đoạn mở đầu hấp dẫn cho một trò chơi phiêu lưu dựa trên văn bản. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi (dựa trên lời nhắc), và đưa ra một mục tiêu hoặc tình huống ban đầu.
+
+Quan trọng: KHÔNG cung cấp cho người chơi các lựa chọn hành động. Thay vào đó, kết thúc mô tả của bạn bằng một câu hỏi mở như "Bây giờ bạn sẽ làm gì?" để khuyến khích người chơi tự nhập hành động của họ.
+`,
 });
 
 const generateAdventureFromPromptFlow = ai.defineFlow(

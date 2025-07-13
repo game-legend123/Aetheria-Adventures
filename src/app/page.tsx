@@ -1,45 +1,57 @@
 'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 import { startAdventure, progressAdventure } from "@/app/actions";
 import { PlayerStatus } from "@/components/game/player-status";
 import { AdventureLog } from "@/components/game/adventure-log";
-import { ActionChoices } from "@/components/game/action-choices";
+import { ActionInput } from "@/components/game/action-input";
 import { PromptScreen } from "@/components/game/prompt-screen";
+import { GameOverScreen } from "@/components/game/game-over-screen";
 
 export type Message = {
   sender: "bot" | "player";
   text: string;
 };
 
-type GameState = "prompt" | "loading" | "playing";
+type GameState = "prompt" | "loading" | "playing" | "gameover";
 
 export default function HomePage() {
   const [gameState, setGameState] = useState<GameState>("prompt");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [choices, setChoices] = useState<string[]>([]);
   const [hp, setHp] = useState(100);
   const [skillPoints, setSkillPoints] = useState(10);
   const [inventory, setInventory] = useState("Một tấm bản đồ rách và một mẩu bánh mì.");
   const [score, setScore] = useState(0);
   const [sceneImageUrl, setSceneImageUrl] = useState<string | null>(null);
+  const [isVictory, setIsVictory] = useState(false);
   
   const { toast } = useToast();
   const lastSceneRef = useRef("");
-  const currentChoicesRef = useRef<string[]>([]);
+
+  useEffect(() => {
+    if (hp <= 0 && gameState === "playing") {
+      setGameState("gameover");
+      setIsVictory(false);
+    }
+  }, [hp, gameState]);
 
   const handleStartAdventure = async (data: { prompt: string }) => {
     setGameState("loading");
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
+    setHp(100);
+    setScore(0);
+    setSkillPoints(10);
+    setInventory("Một tấm bản đồ rách và một mẩu bánh mì.");
+    setSceneImageUrl(null);
+    setIsVictory(false);
+
     const result = await startAdventure(data);
 
-    if (result.success && result.sceneDescription && result.choices) {
+    if (result.success && result.sceneDescription) {
       setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
-      setChoices(result.choices);
       lastSceneRef.current = result.sceneDescription;
-      currentChoicesRef.current = result.choices;
       setSceneImageUrl(result.imageUrl || null);
       setGameState("playing");
     } else {
@@ -56,7 +68,6 @@ export default function HomePage() {
   const handlePlayerChoice = async (choice: string) => {
     setGameState("loading");
     setMessages(prev => [...prev, { sender: "player", text: choice }]);
-    setChoices([]);
     setSceneImageUrl(null);
 
     const result = await progressAdventure({
@@ -68,17 +79,22 @@ export default function HomePage() {
       score,
     });
 
-    if (result.success && result.sceneDescription && result.actionChoices) {
+    if (result.success && result.sceneDescription) {
       setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
-      setChoices(result.actionChoices);
       setHp(result.updatedHp!);
       setSkillPoints(result.updatedSkillPoints!);
       setInventory(result.updatedInventory!);
       setScore(result.updatedScore!);
       setSceneImageUrl(result.imageUrl || null);
       lastSceneRef.current = result.sceneDescription;
-      currentChoicesRef.current = result.actionChoices;
-      setGameState("playing");
+      
+      if (result.gameHasEnded) {
+        setIsVictory(result.isVictory || false);
+        setGameState("gameover");
+      } else {
+        setGameState("playing");
+      }
+
     } else {
       toast({
         variant: "destructive",
@@ -86,14 +102,22 @@ export default function HomePage() {
         description: result.error || "Số phận đang bị rối loạn. Vui lòng thử lại lựa chọn đó.",
       });
       setMessages(prev => prev.slice(0, -1)); // remove player's choice message
-      setChoices(currentChoicesRef.current); // restore previous choices
       setSceneImageUrl(null); // Or restore previous image if you store it
       setGameState("playing");
     }
   };
+
+  const handleRestart = () => {
+    setGameState("prompt");
+    setMessages([]);
+  }
   
   if (gameState === 'prompt' || (gameState === 'loading' && messages.length === 0)) {
     return <PromptScreen onStartAdventure={handleStartAdventure} isLoading={gameState === 'loading'} />;
+  }
+
+  if (gameState === 'gameover') {
+    return <GameOverScreen isVictory={isVictory} score={score} onRestart={handleRestart} />;
   }
   
   return (
@@ -109,7 +133,7 @@ export default function HomePage() {
                     </div>
                 )}
                 <AdventureLog messages={messages} isLoading={gameState === 'loading'} />
-                <ActionChoices choices={choices} onChoice={handlePlayerChoice} isLoading={gameState === 'loading'} />
+                <ActionInput onAction={handlePlayerChoice} isLoading={gameState === 'loading'} />
             </div>
             <div className="hidden md:block h-full overflow-y-auto pr-2">
                 <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} />

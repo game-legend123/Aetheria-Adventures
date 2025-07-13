@@ -16,17 +16,12 @@ export async function startAdventure(data: { prompt: string }) {
     const result = await generateAdventureFromPrompt({ prompt: validatedData.prompt });
     
     const adventureText = result.adventureText;
-    const lines = adventureText.split('\n');
-    const sceneDescription = lines.filter(line => !/^\s*\d\./.test(line)).join('\n').trim();
-    const choices = lines.filter(line => /^\s*\d\./.test(line)).map(line => line.replace(/^\s*\d\.\s*/, '').trim());
-    
-    if (choices.length === 0) {
-      return { success: false, error: "AI không thể cung cấp lựa chọn. Vui lòng thử một mô tả khác." };
-    }
-    
+    // The initial scene description is the whole text from the initial prompt.
+    const sceneDescription = adventureText.trim();
+        
     const imageResult = await generateSceneImage({ sceneDescription });
 
-    return { success: true, sceneDescription, choices, imageUrl: imageResult.imageUrl };
+    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
