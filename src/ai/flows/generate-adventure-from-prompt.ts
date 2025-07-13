@@ -17,7 +17,7 @@ const GenerateAdventureFromPromptInputSchema = z.object({
 export type GenerateAdventureFromPromptInput = z.infer<typeof GenerateAdventureFromPromptInputSchema>;
 
 const GenerateAdventureFromPromptOutputSchema = z.object({
-  adventureText: z.string().describe('The generated adventure text based on the prompt. This should be the opening scene.'),
+  adventureText: z.array(z.string()).describe("An array of strings, where each string is a paragraph of the generated adventure's opening scene."),
   questTitle: z.string().describe('The title of the first quest.'),
   questObjective: z.string().describe('A clear, concise objective for the first quest.'),
   initialSkills: z.string().describe('A comma-separated list of initial skills relevant to the quest. For example: "Thuyết phục, Điều tra, Cảm nhận động cơ".'),
@@ -37,17 +37,17 @@ const prompt = ai.definePrompt({
 Lời nhắc của người dùng: {{{prompt}}}
 
 Nhiệm vụ của bạn:
-1.  **Tạo cảnh mở đầu:** Dựa trên lời nhắc, hãy viết một đoạn văn mở đầu hấp dẫn. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi và đưa ra tình huống ban đầu. Hãy chia các đoạn văn dài thành các đoạn nhỏ hơn (cách nhau bằng dấu xuống dòng) để dễ đọc.
+1.  **Tạo cảnh mở đầu:** Dựa trên lời nhắc, hãy viết một cảnh mở đầu hấp dẫn. Cảnh này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi và đưa ra tình huống ban đầu. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'adventureText'. Mỗi chuỗi trong mảng là một đoạn văn riêng.**
 2.  **Tạo nhiệm vụ đầu tiên:** Từ cảnh mở đầu, hãy tạo ra một nhiệm vụ đầu tiên cho người chơi. Nhiệm vụ này phải có một 'questTitle' (tiêu đề) và một 'questObjective' (mục tiêu) rõ ràng, có thể thực hiện được.
 3.  **Cung cấp kỹ năng ban đầu:** Tạo một danh sách các kỹ năng ban đầu (dạng chuỗi, phân tách bằng dấu phẩy) phù hợp với nhiệm vụ và nhân vật. Ví dụ: "Thuyết phục, Điều tra, Cảm nhận động cơ".
-4.  **Tích hợp vào câu chuyện:** Mô tả ngắn gọn nhiệm vụ này trong 'adventureText' để người chơi biết họ cần làm gì.
+4.  **Tích hợp vào câu chuyện:** Mô tả ngắn gọn nhiệm vụ này trong một trong các đoạn văn của 'adventureText' để người chơi biết họ cần làm gì.
 
 Ví dụ:
 -   **Prompt người dùng:** "Một đạo tặc trẻ tuổi trong một thành phố cảng nhộn nhịp, tìm kiếm một bản đồ kho báu huyền thoại."
 -   **Quest Title:** "Bản đồ bị đánh cắp"
 -   **Quest Objective:** "Tìm và lấy lại mảnh bản đồ từ tay tên trùm гильдии trộm cắp, 'Bàn tay sắt' Gaspard."
 -   **Initial Skills:** "Lẻn lút, Mở khóa, Móc túi"
--   **Adventure Text:** (Mô tả cảnh cảng, sau đó) "... Nhiệm vụ đầu tiên của bạn: Tìm và lấy lại mảnh bản đồ từ tay tên trùm гильдии trộm cắp, 'Bàn tay sắt' Gaspard. Bây giờ bạn sẽ làm gì?"
+-   **Adventure Text:** ["Mùi cá và nước biển mặn mòi tràn ngập không khí của bến cảng...", "Nhiệm vụ đầu tiên của bạn: Tìm và lấy lại mảnh bản đồ từ tay tên trùm гильдии trộm cắp, 'Bàn tay sắt' Gaspard. Bây giờ bạn sẽ làm gì?"]
 
 
 Quan trọng: KHÔNG cung cấp cho người chơi các lựa chọn hành động. Thay vào đó, kết thúc mô tả của bạn bằng một câu hỏi mở như "Bây giờ bạn sẽ làm gì?" để khuyến khích người chơi tự nhập hành động của họ.

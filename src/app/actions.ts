@@ -18,12 +18,12 @@ export async function startAdventure(data: { prompt: string }) {
     const result = await generateAdventureFromPrompt({ prompt: validatedData.prompt });
     
     const adventureText = result.adventureText;
-    // The initial scene description is the whole text from the initial prompt.
-    const sceneDescription = adventureText.trim();
+    // The initial scene description for the image is the first paragraph.
+    const sceneDescription = adventureText[0] || "";
         
     const imageResult = await generateSceneImage({ sceneDescription });
 
-    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl, questTitle: result.questTitle, questObjective: result.questObjective, initialSkills: result.initialSkills };
+    return { success: true, sceneDescription: adventureText, imageUrl: imageResult.imageUrl, questTitle: result.questTitle, questObjective: result.questObjective, initialSkills: result.initialSkills };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
@@ -64,11 +64,12 @@ export async function progressAdventure(data: {
     const validatedData = progressAdventureSchema.parse(data);
     const result = await generateNextScene(validatedData);
 
-    if (!result.sceneDescription) {
+    if (!result.sceneDescription || result.sceneDescription.length === 0) {
        return { success: false, error: "AI không thể tạo cảnh tiếp theo." };
     }
-
-    const imageResult = await generateSceneImage({ sceneDescription: result.sceneDescription });
+    
+    // Use the first paragraph of the new scene to generate the image
+    const imageResult = await generateSceneImage({ sceneDescription: result.sceneDescription[0] });
     
     return { success: true, ...result, imageUrl: imageResult.imageUrl };
   } catch (error: any) {

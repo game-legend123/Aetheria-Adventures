@@ -51,7 +51,7 @@ export default function HomePage() {
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
     setHp(100);
     setScore(0);
-    setSkills("Thuyết phục, Điều tra, Cảm nhận động cơ");
+    setSkills("Chưa có kỹ năng nào.");
     setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
@@ -62,8 +62,9 @@ export default function HomePage() {
     const result = await startAdventure(data);
 
     if (result.success && result.sceneDescription && result.questTitle && result.questObjective && result.initialSkills) {
-      setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
-      lastSceneRef.current = result.sceneDescription;
+      const sceneParagraphs = result.sceneDescription.map(p => ({ sender: "bot" as const, text: p }));
+      setMessages(prev => [...prev, ...sceneParagraphs]);
+      lastSceneRef.current = result.sceneDescription.join("\n\n");
       setSceneImageUrl(result.imageUrl || null);
       setQuestTitle(result.questTitle);
       setQuestObjective(result.questObjective);
@@ -108,7 +109,8 @@ export default function HomePage() {
         }
       }
 
-      newMessages.push({ sender: "bot", text: result.sceneDescription });
+      const sceneParagraphs = result.sceneDescription.map(p => ({ sender: "bot" as const, text: p }));
+      newMessages.push(...sceneParagraphs);
       setMessages(newMessages);
 
       setHp(result.updatedHp!);
@@ -116,7 +118,7 @@ export default function HomePage() {
       setInventory(result.updatedInventory!);
       setScore(result.updatedScore!);
       setSceneImageUrl(result.imageUrl || null);
-      lastSceneRef.current = result.sceneDescription;
+      lastSceneRef.current = result.sceneDescription.join("\n\n");
       
       if (result.questCompleted && result.newQuestTitle && result.newQuestObjective) {
         setQuestTitle(result.newQuestTitle);
@@ -176,8 +178,9 @@ export default function HomePage() {
           setQuestTitle(newStoryResult.questTitle!);
           setQuestObjective(newStoryResult.questObjective!);
           setSceneImageUrl(newStoryResult.imageUrl || null);
-          lastSceneRef.current = newStoryResult.sceneDescription!;
-          setMessages(prev => [...prev, { sender: "bot", text: newStoryResult.sceneDescription! }]);
+          const sceneParagraphs = newStoryResult.sceneDescription!.map(p => ({ sender: "bot" as const, text: p }));
+          lastSceneRef.current = newStoryResult.sceneDescription!.join("\n\n");
+          setMessages(prev => [...prev, ...sceneParagraphs]);
           setGameState("playing");
         } else {
            toast({

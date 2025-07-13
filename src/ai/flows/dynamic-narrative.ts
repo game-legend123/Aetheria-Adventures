@@ -26,7 +26,7 @@ const GenerateNextSceneInputSchema = z.object({
 export type GenerateNextSceneInput = z.infer<typeof GenerateNextSceneInputSchema>;
 
 const GenerateNextSceneOutputSchema = z.object({
-  sceneDescription: z.string().describe("The description of the next scene. This should narrate the outcome of the player's action and set up the new situation. If the player was awarded creativity points, mention it briefly here."),
+  sceneDescription: z.array(z.string()).describe("An array of strings, where each string is a paragraph of the next scene's description. This should narrate the outcome of the player's action and set up the new situation. If the player was awarded creativity points, mention it briefly here."),
   updatedInventory: z.string().describe('The updated player inventory after the action.'),
   updatedHp: z.number().describe('The updated player health points after the action. If this reaches 0, the game is over.'),
   updatedSkills: z.string().describe('The updated player skills. Usually this remains the same unless a quest is completed.'),
@@ -90,7 +90,7 @@ NHIỆM VỤ CỦA BẠN:
 1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
 2.  **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
 3.  **Kiểm tra việc hoàn thành nhiệm vụ:** Dựa trên hành động và kết quả, xác định xem người chơi đã hoàn thành mục tiêu nhiệm vụ chưa. Nếu có, đặt questCompleted là true.
-4.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. Hãy chia các đoạn văn dài thành các đoạn nhỏ hơn (cách nhau bằng dấu xuống dòng) để dễ đọc. Nếu thưởng điểm sáng tạo, hãy đề cập ngắn gọn trong mô tả (ví dụ: "Vì sự lanh lợi của bạn...").
+4.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng.** Nếu thưởng điểm sáng tạo, hãy đề cập ngắn gọn trong một đoạn (ví dụ: "Vì sự lanh lợi của bạn...").
 5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (bao gồm cả điểm hành động và điểm sáng tạo), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ. Đặt 'updatedSkills' thành giá trị của 'newSkills' nếu nhiệm vụ hoàn thành, nếu không thì giữ nguyên kỹ năng cũ.
 6.  **Tạo nhiệm vụ và kỹ năng mới:** Nếu questCompleted là true, hãy tạo ra một newQuestTitle, newQuestObjective, và newSkills hợp lý.
 7.  **Kiểm tra điều kiện kết thúc:** Nếu người chơi đã thắng hoặc thua, hãy đặt gameHasEnded và isVictory cho phù hợp.
@@ -109,7 +109,7 @@ const generateNextSceneFlow = ai.defineFlow(
     // Ensure HP doesn't go below 0 in the input for the prompt
     if (input.hp <= 0) {
       return {
-        sceneDescription: "Bạn đã gục ngã. Cuộc phiêu lưu của bạn đã kết thúc.",
+        sceneDescription: ["Bạn đã gục ngã. Cuộc phiêu lưu của bạn đã kết thúc."],
         updatedHp: 0,
         updatedInventory: input.inventory,
         updatedSkills: input.skills,
