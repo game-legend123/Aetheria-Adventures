@@ -29,7 +29,7 @@ const prompt = ai.definePrompt({
   name: 'generateAdventureFromPromptPrompt',
   input: {schema: GenerateAdventureFromPromptInputSchema},
   output: {schema: GenerateAdventureFromPromptOutputSchema},
-  prompt: `You are a storytelling chatbot that will generate an adventure based on the prompt provided by the user.\nUser Prompt: {{{prompt}}}\n\nGenerate the beginning of a text-based adventure game based on the user prompt. The adventure should include a description of the setting, the player character, and an initial quest or goal. Provide the adventure in a conversational format, where the chatbot describes the scene and then offers the player 3-4 choices for their next action. Ensure the generated content is engaging and immersive, setting the stage for a dynamic and personalized game experience.`,
+  prompt: `Bạn là một chatbot kể chuyện sẽ tạo ra một cuộc phiêu lưu dựa trên mô tả do người dùng cung cấp. TOÀN BỘ PHẢN HỒI CỦA BẠN PHẢI BẰNG TIẾNG VIỆT.\nLời nhắc của người dùng: {{{prompt}}}\n\nTạo phần đầu của một trò chơi phiêu lưu dựa trên văn bản dựa trên lời nhắc của người dùng. Cuộc phiêu lưu phải bao gồm mô tả về bối cảnh, nhân vật người chơi và một nhiệm vụ hoặc mục tiêu ban đầu. Cung cấp cuộc phiêu lưu ở định dạng hội thoại, trong đó chatbot mô tả cảnh và sau đó cung cấp cho người chơi 3-4 lựa chọn cho hành động tiếp theo của họ. Đảm bảo nội dung được tạo ra hấp dẫn và lôi cuốn, tạo tiền đề cho trải nghiệm trò chơi năng động và được cá nhân hóa.`,
 });
 
 const generateAdventureFromPromptFlow = ai.defineFlow(

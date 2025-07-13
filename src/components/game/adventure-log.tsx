@@ -35,7 +35,7 @@ export function AdventureLog({ messages, isLoading }: AdventureLogProps) {
             <Avatar className="border border-primary">
                 {message.sender === "bot" ? (
                 <>
-                    <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="wizard storyteller" alt="Game Master" />
+                    <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="wizard storyteller" alt="Quản trò" />
                     <AvatarFallback><Bot /></AvatarFallback>
                 </>
                 ) : (
@@ -58,12 +58,12 @@ export function AdventureLog({ messages, isLoading }: AdventureLogProps) {
       {isLoading && (
         <div className="flex items-start gap-4 justify-start">
           <Avatar className="border border-primary">
-            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="wizard storyteller" alt="Game Master" />
+            <AvatarImage src="https://placehold.co/40x40.png" data-ai-hint="wizard storyteller" alt="Quản trò" />
             <AvatarFallback><Bot /></AvatarFallback>
           </Avatar>
           <div className="max-w-xl rounded-lg px-4 py-3 shadow-md bg-secondary text-secondary-foreground">
             <div className="flex items-center space-x-2">
-              <span className="text-muted-foreground">The story unfolds...</span>
+              <span className="text-muted-foreground">Câu chuyện đang mở ra...</span>
               <div className="w-2 h-2 rounded-full bg-accent animate-pulse [animation-delay:0s]"></div>
               <div className="w-2 h-2 rounded-full bg-accent animate-pulse [animation-delay:0.2s]"></div>
               <div className="w-2 h-2 rounded-full bg-accent animate-pulse [animation-delay:0.4s]"></div>

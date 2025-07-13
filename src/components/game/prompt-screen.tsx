@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Wand2 } from "lucide-react";
 
 const formSchema = z.object({
-  prompt: z.string().min(10, "Your prompt should be at least 10 characters long.").max(500, "Prompt cannot exceed 500 characters."),
+  prompt: z.string().min(10, "Mô tả của bạn cần ít nhất 10 ký tự.").max(500, "Mô tả không được vượt quá 500 ký tự."),
 });
 
 type PromptFormValues = z.infer<typeof formSchema>;
@@ -24,7 +24,7 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: "A young rogue in a bustling port city, searching for a legendary treasure map.",
+      prompt: "Một đạo tặc trẻ tuổi trong một thành phố cảng nhộn nhịp, tìm kiếm một bản đồ kho báu huyền thoại.",
     },
   });
 
@@ -36,9 +36,9 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
           <div className="mx-auto bg-primary/20 p-4 rounded-full w-fit mb-4">
             <Wand2 className="w-10 h-10 text-accent" />
           </div>
-          <CardTitle className="text-4xl font-headline text-accent">Legends of Aetheria</CardTitle>
+          <CardTitle className="text-4xl font-headline text-accent">Huyền thoại xứ Aetheria</CardTitle>
           <CardDescription className="text-lg text-muted-foreground pt-2">
-            Describe your hero, the setting, or the quest you wish to embark on. The AI Game Master will weave your tale.
+            Mô tả anh hùng của bạn, bối cảnh, hoặc nhiệm vụ bạn muốn bắt đầu. Quản trò AI sẽ dệt nên câu chuyện của bạn.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -49,10 +49,10 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="sr-only">Adventure Prompt</FormLabel>
+                    <FormLabel className="sr-only">Mô tả cuộc phiêu lưu</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., A grizzled dwarf warrior seeking a lost relic in a mountain fortress..."
+                        placeholder="VD: Một chiến binh người lùn dày dạn kinh nghiệm tìm kiếm một di vật bị mất trong pháo đài trên núi..."
                         className="min-h-[120px] text-base bg-background/70 focus:bg-background"
                         disabled={isLoading}
                         {...field}
@@ -63,7 +63,7 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
                 )}
               />
               <Button type="submit" disabled={isLoading} size="lg" className="w-full text-lg bg-primary hover:bg-primary/90">
-                {isLoading ? "Summoning the world..." : "Begin Your Adventure"}
+                {isLoading ? "Đang kiến tạo thế giới..." : "Bắt đầu cuộc phiêu lưu"}
               </Button>
             </form>
           </Form>

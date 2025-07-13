@@ -7,7 +7,7 @@ import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 const startAdventureSchema = z.object({
-  prompt: z.string().min(10, "Prompt must be at least 10 characters long."),
+  prompt: z.string().min(10, "Mô tả phải có ít nhất 10 ký tự."),
 });
 
 export async function startAdventure(data: { prompt: string }) {
@@ -21,7 +21,7 @@ export async function startAdventure(data: { prompt: string }) {
     const choices = lines.filter(line => /^\s*\d\./.test(line)).map(line => line.replace(/^\s*\d\.\s*/, '').trim());
     
     if (choices.length === 0) {
-      return { success: false, error: "The AI failed to provide choices. Please try a different prompt." };
+      return { success: false, error: "AI không thể cung cấp lựa chọn. Vui lòng thử một mô tả khác." };
     }
     
     const imageResult = await generateSceneImage({ sceneDescription });
@@ -31,8 +31,8 @@ export async function startAdventure(data: { prompt: string }) {
     if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
     }
-    console.error("Error starting adventure:", error);
-    return { success: false, error: "Failed to start adventure. Please try again." };
+    console.error("Lỗi khi bắt đầu cuộc phiêu lưu:", error);
+    return { success: false, error: "Không thể bắt đầu cuộc phiêu lưu. Vui lòng thử lại." };
   }
 }
 
@@ -58,7 +58,7 @@ export async function progressAdventure(data: {
     const result = await generateNextScene(validatedData);
 
     if (!result.sceneDescription) {
-       return { success: false, error: "The AI failed to generate the next scene." };
+       return { success: false, error: "AI không thể tạo cảnh tiếp theo." };
     }
 
     const imageResult = await generateSceneImage({ sceneDescription: result.sceneDescription });
@@ -68,7 +68,7 @@ export async function progressAdventure(data: {
      if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
     }
-    console.error("Error progressing adventure:", error);
-    return { success: false, error: "Failed to progress adventure. Please try again." };
+    console.error("Lỗi khi tiếp tục cuộc phiêu lưu:", error);
+    return { success: false, error: "Không thể tiếp tục cuộc phiêu lưu. Vui lòng thử lại." };
   }
 }
