@@ -26,11 +26,13 @@ const GenerateNextSceneInputSchema = z.object({
 export type GenerateNextSceneInput = z.infer<typeof GenerateNextSceneInputSchema>;
 
 const GenerateNextSceneOutputSchema = z.object({
-  sceneDescription: z.array(z.string()).describe("An array of strings, where each string is a paragraph of the next scene's description. This should narrate the outcome of the player's action and set up the new situation. If the player was awarded creativity points, mention it briefly here."),
+  sceneDescription: z.array(z.string()).describe("An array of strings, where each string is a paragraph of the next scene's description. This should narrate the outcome of the player's action and set up the new situation."),
   updatedInventory: z.string().describe('The updated player inventory after the action.'),
   updatedHp: z.number().describe('The updated player health points after the action. If this reaches 0, the game is over.'),
   updatedSkills: z.string().describe('The updated player skills. Usually this remains the same unless a quest is completed.'),
   updatedScore: z.number().describe('The updated player score after the recent action.'),
+  scoreChange: z.number().describe('The number of points awarded for the action (can be 0).'),
+  scoreChangeReason: z.string().describe('A brief, clear explanation for the score change (e.g., "Hành động thành công", "Sáng tạo đột phá", "Nhiệm vụ hoàn thành").'),
   questCompleted: z.boolean().describe("Set to true if the player's action has successfully completed the current quest."),
   newQuestTitle: z.string().optional().describe('If the previous quest was completed, provide the title for the next quest. If the game is won, this can be a title like "Chiến thắng!".'),
   newQuestObjective: z.string().optional().describe('If the previous quest was completed, provide the objective for the next quest. If the game is won, this can be a description of the victory.'),
@@ -89,11 +91,12 @@ Bối cảnh hiện tại:
 NHIỆM VỤ CỦA BẠN:
 1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
 2.  **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
-3.  **Kiểm tra việc hoàn thành nhiệm vụ:** Dựa trên hành động và kết quả, xác định xem người chơi đã hoàn thành mục tiêu nhiệm vụ chưa. Nếu có, đặt questCompleted là true.
-4.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng.** Nếu thưởng điểm sáng tạo, hãy đề cập ngắn gọn trong một đoạn (ví dụ: "Vì sự lanh lợi của bạn...").
-5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (bao gồm cả điểm hành động và điểm sáng tạo), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ. Đặt 'updatedSkills' thành giá trị của 'newSkills' nếu nhiệm vụ hoàn thành, nếu không thì giữ nguyên kỹ năng cũ.
-6.  **Tạo nhiệm vụ và kỹ năng mới:** Nếu questCompleted là true, hãy tạo ra một newQuestTitle, newQuestObjective, và newSkills hợp lý.
-7.  **Kiểm tra điều kiện kết thúc:** Nếu người chơi đã thắng hoặc thua, hãy đặt gameHasEnded và isVictory cho phù hợp.
+3.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng.**
+4.  **Tính điểm và giải thích:** Dựa trên kết quả (và việc hoàn thành nhiệm vụ), tính tổng số điểm người chơi nhận được cho lượt này. Gán tổng điểm này vào 'scoreChange'. Viết một lý do ngắn gọn, rõ ràng cho số điểm đó vào 'scoreChangeReason'. Ví dụ: nếu người chơi thành công (+10) và sáng tạo (+15), thì 'scoreChange' là 25 và 'scoreChangeReason' là "Thành công & Sáng tạo". Nếu hoàn thành nhiệm vụ, 'scoreChange' là 100 và 'scoreChangeReason' là "Hoàn thành nhiệm vụ".
+5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (cộng 'scoreChange' vào điểm hiện tại), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ.
+6.  **Kiểm tra việc hoàn thành nhiệm vụ:** Nếu hành động và kết quả hoàn thành nhiệm vụ, đặt 'questCompleted' là true.
+7.  **Tạo nhiệm vụ và kỹ năng mới:** Nếu questCompleted là true, hãy tạo ra một newQuestTitle, newQuestObjective, và newSkills hợp lý. Đặt 'updatedSkills' thành giá trị của 'newSkills', nếu không thì giữ nguyên kỹ năng cũ.
+8.  **Kiểm tra điều kiện kết thúc:** Nếu người chơi đã thắng hoặc thua, hãy đặt gameHasEnded và isVictory cho phù hợp.
 
 Tuyệt đối không cung cấp các lựa chọn cho người chơi. Hãy để họ tự quyết định phải làm gì tiếp theo.
 `,
@@ -114,6 +117,8 @@ const generateNextSceneFlow = ai.defineFlow(
         updatedInventory: input.inventory,
         updatedSkills: input.skills,
         updatedScore: input.score,
+        scoreChange: 0,
+        scoreChangeReason: "Trò chơi kết thúc.",
         questCompleted: false,
         gameHasEnded: true,
         isVictory: false,

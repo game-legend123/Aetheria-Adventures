@@ -86,8 +86,6 @@ export default function HomePage() {
     setMessages(prev => [...prev, { sender: "player", text: choice }]);
     setSceneImageUrl(null);
 
-    const currentQuestTitle = questTitle;
-
     const result = await progressAdventure({
       previousScene: lastSceneRef.current,
       playerChoice: choice,
@@ -102,10 +100,13 @@ export default function HomePage() {
     if (result.success && result.sceneDescription) {
       const newMessages: Message[] = [...messages, { sender: "player", text: choice }];
       
+      if (result.scoreChange && result.scoreChange > 0 && result.scoreChangeReason) {
+        newMessages.push({ sender: "system", text: `+${result.scoreChange} Điểm (${result.scoreChangeReason})` });
+      }
+
       if (result.questCompleted) {
-        newMessages.push({ sender: "system", text: `Nhiệm vụ hoàn thành: ${currentQuestTitle} (+100 Điểm)` });
-        if (result.newSkills) {
-            newMessages.push({ sender: "system", text: `Kỹ năng mới nhận được: ${result.newSkills}` });
+        if(result.newSkills) {
+          newMessages.push({ sender: "system", text: `Kỹ năng mới nhận được: ${result.newSkills}` });
         }
       }
 
@@ -257,7 +258,7 @@ export default function HomePage() {
             className="absolute bottom-4 right-4 h-12 rounded-full shadow-lg bg-secondary/50 hover:bg-secondary border-primary/20"
             >
             <BookOpen className="h-6 w-6" />
-            <span>Hướng dẫn</span>
+            <span className="ml-2">Hướng dẫn</span>
         </Button>
     </main>
   );
