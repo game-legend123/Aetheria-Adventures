@@ -10,8 +10,9 @@ import { ActionInput } from "@/components/game/action-input";
 import { PromptScreen } from "@/components/game/prompt-screen";
 import { GameOverScreen } from "@/components/game/game-over-screen";
 import { SystemChat } from "@/components/game/system-chat";
+import { GameGuide } from "@/components/game/game-guide";
 import { Button } from "@/components/ui/button";
-import { Wand2 } from "lucide-react";
+import { Wand2, BookOpen } from "lucide-react";
 
 
 export type Message = {
@@ -33,6 +34,7 @@ export default function HomePage() {
   const [questTitle, setQuestTitle] = useState("");
   const [questObjective, setQuestObjective] = useState("");
   const [isSystemChatOpen, setSystemChatOpen] = useState(false);
+  const [isGuideOpen, setGuideOpen] = useState(false);
   
   const { toast } = useToast();
   const lastSceneRef = useRef("");
@@ -49,7 +51,7 @@ export default function HomePage() {
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
     setHp(100);
     setScore(0);
-    setSkills("Chưa có kỹ năng nào.");
+    setSkills("Thuyết phục, Điều tra, Cảm nhận động cơ");
     setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
@@ -244,6 +246,16 @@ export default function HomePage() {
             onClose={() => setSystemChatOpen(false)}
             onSendMessage={handleSystemChat}
         />
+        <GameGuide isOpen={isGuideOpen} onClose={() => setGuideOpen(false)} />
+        <Button 
+            onClick={() => setGuideOpen(true)} 
+            variant="outline"
+            size="icon"
+            className="absolute bottom-4 right-4 h-12 w-12 rounded-full shadow-lg bg-secondary/50 hover:bg-secondary border-primary/20"
+            >
+            <BookOpen className="h-6 w-6" />
+            <span className="sr-only">Mở Hướng dẫn</span>
+        </Button>
     </main>
   );
 }
