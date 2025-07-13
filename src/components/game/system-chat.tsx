@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRight, Bot, User } from 'lucide-react';
+import { ArrowRight, Bot, User, Wand2 } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
@@ -28,7 +28,7 @@ export function SystemChat({ isOpen, onClose, onSendMessage }: SystemChatProps) 
 
     useEffect(() => {
         if (isOpen && messages.length === 0) {
-            setMessages([{ sender: 'system', text: 'Chào mừng đến với Hệ thống. Tôi có thể giúp gì cho bạn?' }]);
+            setMessages([{ sender: 'system', text: 'Chào mừng. Tại đây, bạn có thể thay đổi thực tại của câu chuyện. Bạn muốn điều chỉnh điều gì?' }]);
         }
     }, [isOpen, messages.length]);
     
@@ -58,9 +58,9 @@ export function SystemChat({ isOpen, onClose, onSendMessage }: SystemChatProps) 
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px] md:max-w-[600px] h-[70vh] flex flex-col">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2"><Bot /> Trò chuyện với Hệ thống</DialogTitle>
+                    <DialogTitle className="flex items-center gap-2"><Wand2 /> Can thiệp vào Câu chuyện</DialogTitle>
                     <DialogDescription>
-                        Bạn có thể hỏi về luật chơi, xin gợi ý hoặc trao đổi tài nguyên.
+                        Nói chuyện với Quản trò để thay đổi hướng đi của câu chuyện, hỏi thông tin, hoặc trao đổi tài nguyên.
                     </DialogDescription>
                 </DialogHeader>
                 <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 border rounded-md my-4 bg-background/50">
@@ -108,7 +108,7 @@ export function SystemChat({ isOpen, onClose, onSendMessage }: SystemChatProps) 
                     <Input
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="Nhập tin nhắn..."
+                        placeholder="Yêu cầu của bạn là gì?"
                         disabled={isLoading}
                         className="flex-1"
                     />

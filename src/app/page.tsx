@@ -11,7 +11,7 @@ import { PromptScreen } from "@/components/game/prompt-screen";
 import { GameOverScreen } from "@/components/game/game-over-screen";
 import { SystemChat } from "@/components/game/system-chat";
 import { Button } from "@/components/ui/button";
-import { Bot } from "lucide-react";
+import { Bot, Wand2 } from "lucide-react";
 
 
 export type Message = {
@@ -49,7 +49,7 @@ export default function HomePage() {
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
     setHp(100);
     setScore(0);
-    setSkills("Chưa có kỹ năng nào.");
+    setSkills("Thuyết phục, Điều tra, Cảm nhận động cơ");
     setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
@@ -154,6 +154,7 @@ export default function HomePage() {
       score,
       questTitle,
       questObjective,
+      sceneDescription: lastSceneRef.current,
     });
 
     if (result.success) {
@@ -203,9 +204,9 @@ export default function HomePage() {
             </div>
             <div className="hidden md:flex flex-col h-full overflow-y-auto pr-2 gap-4">
                 <PlayerStatus hp={hp} skills={skills} inventory={inventory} score={score} questTitle={questTitle} questObjective={questObjective} />
-                 <Button onClick={() => setSystemChatOpen(true)} className="w-full" variant="outline">
-                    <Bot className="mr-2 h-4 w-4"/>
-                    Trò chuyện với Hệ thống
+                 <Button onClick={() => setSystemChatOpen(true)} className="w-full bg-primary/80 hover:bg-primary text-primary-foreground shadow-lg" size="lg">
+                    <Wand2 className="mr-2 h-5 w-5"/>
+                    Can thiệp vào Câu chuyện
                 </Button>
             </div>
         </div>
