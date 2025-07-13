@@ -81,6 +81,8 @@ const systemChatSchema = z.object({
     skillPoints: z.number(),
     inventory: z.string(),
     score: z.number(),
+    questTitle: z.string(),
+    questObjective: z.string(),
 });
 
 export async function chatWithSystem(data: {
@@ -89,6 +91,8 @@ export async function chatWithSystem(data: {
     skillPoints: number;
     inventory: string;
     score: number;
+    questTitle: string;
+    questObjective: string;
 }): Promise<{ success: true; response: string; stateUpdates?: SystemChatOutput['stateUpdates'] } | { success: false; error: string }> {
     try {
         const validatedData = systemChatSchema.parse(data);

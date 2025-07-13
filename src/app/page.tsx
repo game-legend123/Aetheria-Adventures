@@ -148,6 +148,8 @@ export default function HomePage() {
       skillPoints,
       inventory,
       score,
+      questTitle,
+      questObjective,
     });
 
     if (result.success) {
