@@ -3,12 +3,16 @@
 import { useState, useRef, useEffect } from "react";
 import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
-import { startAdventure, progressAdventure } from "@/app/actions";
+import { startAdventure, progressAdventure, chatWithSystem } from "@/app/actions";
 import { PlayerStatus } from "@/components/game/player-status";
 import { AdventureLog } from "@/components/game/adventure-log";
 import { ActionInput } from "@/components/game/action-input";
 import { PromptScreen } from "@/components/game/prompt-screen";
 import { GameOverScreen } from "@/components/game/game-over-screen";
+import { SystemChat } from "@/components/game/system-chat";
+import { Button } from "@/components/ui/button";
+import { Bot } from "lucide-react";
+
 
 export type Message = {
   sender: "bot" | "player" | "system";
@@ -28,6 +32,7 @@ export default function HomePage() {
   const [isVictory, setIsVictory] = useState(false);
   const [questTitle, setQuestTitle] = useState("");
   const [questObjective, setQuestObjective] = useState("");
+  const [isSystemChatOpen, setSystemChatOpen] = useState(false);
   
   const { toast } = useToast();
   const lastSceneRef = useRef("");
@@ -135,6 +140,37 @@ export default function HomePage() {
     setGameState("prompt");
     setMessages([]);
   }
+
+  const handleSystemChat = async (message: string) => {
+    const result = await chatWithSystem({
+      userMessage: message,
+      hp,
+      skillPoints,
+      inventory,
+      score,
+    });
+
+    if (result.success) {
+      if (result.stateUpdates) {
+        setHp(result.stateUpdates.hp);
+        setSkillPoints(result.stateUpdates.skillPoints);
+        setInventory(result.stateUpdates.inventory);
+        setScore(result.stateUpdates.score);
+        toast({
+            title: "Hệ thống đã cập nhật chỉ số",
+            description: "Trạng thái của bạn đã được thay đổi.",
+        });
+      }
+      return result.response;
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Lỗi Hệ thống",
+        description: result.error,
+      });
+      return "Hệ thống hiện đang gặp sự cố, vui lòng thử lại sau.";
+    }
+  }
   
   if (gameState === 'prompt' || (gameState === 'loading' && messages.length === 0)) {
     return <PromptScreen onStartAdventure={handleStartAdventure} isLoading={gameState === 'loading'} />;
@@ -159,10 +195,19 @@ export default function HomePage() {
                 <AdventureLog messages={messages} isLoading={gameState === 'loading'} />
                 <ActionInput onAction={handlePlayerChoice} isLoading={gameState === 'loading'} />
             </div>
-            <div className="hidden md:block h-full overflow-y-auto pr-2">
+            <div className="hidden md:flex flex-col h-full overflow-y-auto pr-2 gap-4">
                 <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} questTitle={questTitle} questObjective={questObjective} />
+                 <Button onClick={() => setSystemChatOpen(true)} className="w-full" variant="outline">
+                    <Bot className="mr-2 h-4 w-4"/>
+                    Trò chuyện với Hệ thống
+                </Button>
             </div>
         </div>
+        <SystemChat 
+            isOpen={isSystemChatOpen}
+            onClose={() => setSystemChatOpen(false)}
+            onSendMessage={handleSystemChat}
+        />
     </main>
   );
 }
