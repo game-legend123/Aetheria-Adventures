@@ -25,7 +25,7 @@ export default function HomePage() {
   const [gameState, setGameState] = useState<GameState>("prompt");
   const [messages, setMessages] = useState<Message[]>([]);
   const [hp, setHp] = useState(100);
-  const [skillPoints, setSkillPoints] = useState(10);
+  const [skills, setSkills] = useState("Chưa có kỹ năng nào.");
   const [inventory, setInventory] = useState("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
   const [score, setScore] = useState(0);
   const [sceneImageUrl, setSceneImageUrl] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export default function HomePage() {
     setMessages([{ sender: "player", text: `Hãy bắt đầu với: ${data.prompt}` }]);
     setHp(100);
     setScore(0);
-    setSkillPoints(10);
+    setSkills("Chưa có kỹ năng nào.");
     setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
@@ -59,12 +59,13 @@ export default function HomePage() {
 
     const result = await startAdventure(data);
 
-    if (result.success && result.sceneDescription && result.questTitle && result.questObjective) {
+    if (result.success && result.sceneDescription && result.questTitle && result.questObjective && result.initialSkills) {
       setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
       lastSceneRef.current = result.sceneDescription;
       setSceneImageUrl(result.imageUrl || null);
       setQuestTitle(result.questTitle);
       setQuestObjective(result.questObjective);
+      setSkills(result.initialSkills);
       setGameState("playing");
     } else {
       toast({
@@ -89,7 +90,7 @@ export default function HomePage() {
       playerChoice: choice,
       inventory,
       hp,
-      skillPoints,
+      skills,
       score,
       questTitle,
       questObjective,
@@ -100,13 +101,16 @@ export default function HomePage() {
       
       if (result.questCompleted) {
         newMessages.push({ sender: "system", text: `Nhiệm vụ hoàn thành: ${currentQuestTitle} (+100 Điểm)` });
+        if (result.newSkills) {
+            newMessages.push({ sender: "system", text: `Kỹ năng mới nhận được: ${result.newSkills}` });
+        }
       }
 
       newMessages.push({ sender: "bot", text: result.sceneDescription });
       setMessages(newMessages);
 
       setHp(result.updatedHp!);
-      setSkillPoints(result.updatedSkillPoints!);
+      setSkills(result.updatedSkills!);
       setInventory(result.updatedInventory!);
       setScore(result.updatedScore!);
       setSceneImageUrl(result.imageUrl || null);
@@ -145,7 +149,7 @@ export default function HomePage() {
     const result = await chatWithSystem({
       userMessage: message,
       hp,
-      skillPoints,
+      skills,
       inventory,
       score,
       questTitle,
@@ -155,7 +159,7 @@ export default function HomePage() {
     if (result.success) {
       if (result.stateUpdates) {
         setHp(result.stateUpdates.hp);
-        setSkillPoints(result.stateUpdates.skillPoints);
+        setSkills(result.stateUpdates.skills);
         setInventory(result.stateUpdates.inventory);
         setScore(result.stateUpdates.score);
         toast({
@@ -198,7 +202,7 @@ export default function HomePage() {
                 <ActionInput onAction={handlePlayerChoice} isLoading={gameState === 'loading'} />
             </div>
             <div className="hidden md:flex flex-col h-full overflow-y-auto pr-2 gap-4">
-                <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} questTitle={questTitle} questObjective={questObjective} />
+                <PlayerStatus hp={hp} skills={skills} inventory={inventory} score={score} questTitle={questTitle} questObjective={questObjective} />
                  <Button onClick={() => setSystemChatOpen(true)} className="w-full" variant="outline">
                     <Bot className="mr-2 h-4 w-4"/>
                     Trò chuyện với Hệ thống

@@ -23,7 +23,7 @@ export async function startAdventure(data: { prompt: string }) {
         
     const imageResult = await generateSceneImage({ sceneDescription });
 
-    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl, questTitle: result.questTitle, questObjective: result.questObjective };
+    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl, questTitle: result.questTitle, questObjective: result.questObjective, initialSkills: result.initialSkills };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
@@ -38,7 +38,7 @@ const progressAdventureSchema = z.object({
   playerChoice: z.string(),
   inventory: z.string(),
   hp: z.number(),
-  skillPoints: z.number(),
+  skills: z.string(),
   score: z.number(),
   questTitle: z.string(),
   questObjective: z.string(),
@@ -49,7 +49,7 @@ export async function progressAdventure(data: {
   playerChoice: string;
   inventory: string;
   hp: number;
-  skillPoints: number;
+  skills: string;
   score: number;
   questTitle: string;
   questObjective: string;
@@ -78,7 +78,7 @@ export async function progressAdventure(data: {
 const systemChatSchema = z.object({
     userMessage: z.string(),
     hp: z.number(),
-    skillPoints: z.number(),
+    skills: z.string(),
     inventory: z.string(),
     score: z.number(),
     questTitle: z.string(),
@@ -88,7 +88,7 @@ const systemChatSchema = z.object({
 export async function chatWithSystem(data: {
     userMessage: string;
     hp: number;
-    skillPoints: number;
+    skills: string;
     inventory: string;
     score: number;
     questTitle: string;

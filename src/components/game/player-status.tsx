@@ -5,14 +5,14 @@ import { Heart, Sparkles, Backpack, Star, ScrollText } from "lucide-react";
 
 type PlayerStatusProps = {
   hp: number;
-  skillPoints: number;
+  skills: string;
   inventory: string;
   score: number;
   questTitle: string;
   questObjective: string;
 };
 
-export function PlayerStatus({ hp, skillPoints, inventory, score, questTitle, questObjective }: PlayerStatusProps) {
+export function PlayerStatus({ hp, skills, inventory, score, questTitle, questObjective }: PlayerStatusProps) {
   return (
     <Card className="bg-secondary/40 border-primary/20 backdrop-blur-sm sticky top-4">
       <CardHeader>
@@ -29,10 +29,12 @@ export function PlayerStatus({ hp, skillPoints, inventory, score, questTitle, qu
           </div>
           <Progress value={hp} className="h-3 [&>div]:bg-destructive" />
         </div>
-        <div className="flex items-center gap-3">
-          <Sparkles className="w-5 h-5 text-accent" />
-          <p className="font-semibold">Điểm kỹ năng</p>
-          <span className="font-bold text-lg ml-auto">{skillPoints}</span>
+        <div className="flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-accent mt-1" />
+          <div>
+            <p className="font-semibold">Kỹ năng</p>
+            <p className="text-sm text-muted-foreground italic">{skills}</p>
+          </div>
         </div>
          <div className="flex items-center gap-3">
           <Star className="w-5 h-5 text-yellow-400" />
