@@ -23,7 +23,7 @@ export type GenerateSceneImageOutput = z.infer<typeof GenerateSceneImageOutputSc
 export async function generateSceneImage(input: GenerateSceneImageInput): Promise<GenerateSceneImageOutput> {
   const { media } = await ai.generate({
     model: 'googleai/gemini-2.0-flash-preview-image-generation',
-    prompt: `Một bức tranh kỹ thuật số theo phong cách giả tưởng đen tối, mô tả cảnh sau: ${input.sceneDescription}. Chỉ hình ảnh, không có văn bản.`,
+    prompt: `Một bức tranh kỹ thuật số theo phong cách giả tưởng đen tối, mô tả cảnh sau: ${input.sceneDescription}. Chỉ tạo hình ảnh, tuyệt đối không có bất kỳ văn bản, chữ cái, hay ký tự nào trong ảnh.`,
     config: {
       responseModalities: ['TEXT', 'IMAGE'],
     },
