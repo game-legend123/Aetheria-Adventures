@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import type { Message } from "@/app/page";
 import { useEffect, useRef } from "react";
-import { Bot, User } from "lucide-react";
+import { Bot, User, Award } from "lucide-react";
 
 type AdventureLogProps = {
   messages: Message[];
@@ -24,6 +24,18 @@ export function AdventureLog({ messages, isLoading }: AdventureLogProps) {
     <div ref={scrollAreaRef} className="flex-1 space-y-6 overflow-y-auto p-4 rounded-lg bg-black/20">
       {messages.map((message, index) => {
         if(message.sender === 'bot' && index === 0) return null; // Hide initial bot message if needed
+        
+        if (message.sender === 'system') {
+          return (
+             <div key={index} className="text-center py-2 animate-in fade-in duration-500">
+                <p className="text-sm font-semibold text-yellow-400 bg-yellow-400/10 rounded-full px-4 py-2 inline-flex items-center gap-2">
+                  <Award className="w-4 h-4" />
+                  {message.text}
+                </p>
+            </div>
+          )
+        }
+        
         return (
             <div
             key={index}

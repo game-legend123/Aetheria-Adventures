@@ -18,6 +18,8 @@ export type GenerateAdventureFromPromptInput = z.infer<typeof GenerateAdventureF
 
 const GenerateAdventureFromPromptOutputSchema = z.object({
   adventureText: z.string().describe('The generated adventure text based on the prompt. This should be the opening scene.'),
+  questTitle: z.string().describe('The title of the first quest.'),
+  questObjective: z.string().describe('A clear, concise objective for the first quest.'),
 });
 export type GenerateAdventureFromPromptOutput = z.infer<typeof GenerateAdventureFromPromptOutputSchema>;
 
@@ -33,7 +35,17 @@ const prompt = ai.definePrompt({
 
 Lời nhắc của người dùng: {{{prompt}}}
 
-Tạo ra một đoạn mở đầu hấp dẫn cho một trò chơi phiêu lưu dựa trên văn bản. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi (dựa trên lời nhắc), và đưa ra một mục tiêu hoặc tình huống ban đầu.
+Nhiệm vụ của bạn:
+1.  **Tạo cảnh mở đầu:** Dựa trên lời nhắc, hãy viết một đoạn văn mở đầu hấp dẫn. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi và đưa ra tình huống ban đầu.
+2.  **Tạo nhiệm vụ đầu tiên:** Từ cảnh mở đầu, hãy tạo ra một nhiệm vụ đầu tiên cho người chơi. Nhiệm vụ này phải có một 'questTitle' (tiêu đề) và một 'questObjective' (mục tiêu) rõ ràng, có thể thực hiện được.
+3.  **Tích hợp vào câu chuyện:** Mô tả ngắn gọn nhiệm vụ này trong 'adventureText' để người chơi biết họ cần làm gì.
+
+Ví dụ:
+-   **Prompt người dùng:** "Một đạo tặc trẻ tuổi trong một thành phố cảng nhộn nhịp, tìm kiếm một bản đồ kho báu huyền thoại."
+-   **Quest Title:** "Bản đồ bị đánh cắp"
+-   **Quest Objective:** "Tìm và lấy lại mảnh bản đồ từ tay tên trùm гильдии trộm cắp, 'Bàn tay sắt' Gaspard."
+-   **Adventure Text:** (Mô tả cảnh cảng, sau đó) "... Nhiệm vụ đầu tiên của bạn: Tìm và lấy lại mảnh bản đồ từ tay tên trùm гильдии trộm cắp, 'Bàn tay sắt' Gaspard. Bây giờ bạn sẽ làm gì?"
+
 
 Quan trọng: KHÔNG cung cấp cho người chơi các lựa chọn hành động. Thay vào đó, kết thúc mô tả của bạn bằng một câu hỏi mở như "Bây giờ bạn sẽ làm gì?" để khuyến khích người chơi tự nhập hành động của họ.
 `,

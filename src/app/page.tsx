@@ -11,7 +11,7 @@ import { PromptScreen } from "@/components/game/prompt-screen";
 import { GameOverScreen } from "@/components/game/game-over-screen";
 
 export type Message = {
-  sender: "bot" | "player";
+  sender: "bot" | "player" | "system";
   text: string;
 };
 
@@ -26,6 +26,8 @@ export default function HomePage() {
   const [score, setScore] = useState(0);
   const [sceneImageUrl, setSceneImageUrl] = useState<string | null>(null);
   const [isVictory, setIsVictory] = useState(false);
+  const [questTitle, setQuestTitle] = useState("");
+  const [questObjective, setQuestObjective] = useState("");
   
   const { toast } = useToast();
   const lastSceneRef = useRef("");
@@ -46,13 +48,18 @@ export default function HomePage() {
     setInventory("Một tấm bản đồ rách và một mẩu bánh mì.");
     setSceneImageUrl(null);
     setIsVictory(false);
+    setQuestTitle("");
+    setQuestObjective("");
+
 
     const result = await startAdventure(data);
 
-    if (result.success && result.sceneDescription) {
+    if (result.success && result.sceneDescription && result.questTitle && result.questObjective) {
       setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
       lastSceneRef.current = result.sceneDescription;
       setSceneImageUrl(result.imageUrl || null);
+      setQuestTitle(result.questTitle);
+      setQuestObjective(result.questObjective);
       setGameState("playing");
     } else {
       toast({
@@ -77,10 +84,20 @@ export default function HomePage() {
       hp,
       skillPoints,
       score,
+      questTitle,
+      questObjective,
     });
 
     if (result.success && result.sceneDescription) {
-      setMessages(prev => [...prev, { sender: "bot", text: result.sceneDescription }]);
+      const newMessages: Message[] = [...messages, { sender: "player", text: choice }];
+      
+      if (result.questCompleted) {
+        newMessages.push({ sender: "system", text: `Nhiệm vụ hoàn thành: ${questTitle} (+100 Điểm)` });
+      }
+
+      newMessages.push({ sender: "bot", text: result.sceneDescription });
+      setMessages(newMessages);
+
       setHp(result.updatedHp!);
       setSkillPoints(result.updatedSkillPoints!);
       setInventory(result.updatedInventory!);
@@ -88,6 +105,11 @@ export default function HomePage() {
       setSceneImageUrl(result.imageUrl || null);
       lastSceneRef.current = result.sceneDescription;
       
+      if (result.questCompleted && result.newQuestTitle && result.newQuestObjective) {
+        setQuestTitle(result.newQuestTitle);
+        setQuestObjective(result.newQuestObjective);
+      }
+
       if (result.gameHasEnded) {
         setIsVictory(result.isVictory || false);
         setGameState("gameover");
@@ -136,7 +158,7 @@ export default function HomePage() {
                 <ActionInput onAction={handlePlayerChoice} isLoading={gameState === 'loading'} />
             </div>
             <div className="hidden md:block h-full overflow-y-auto pr-2">
-                <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} />
+                <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} questTitle={questTitle} questObjective={questObjective} />
             </div>
         </div>
     </main>

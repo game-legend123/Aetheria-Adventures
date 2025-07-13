@@ -1,15 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Heart, Sparkles, Backpack, Star } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Heart, Sparkles, Backpack, Star, ScrollText } from "lucide-react";
 
 type PlayerStatusProps = {
   hp: number;
   skillPoints: number;
   inventory: string;
   score: number;
+  questTitle: string;
+  questObjective: string;
 };
 
-export function PlayerStatus({ hp, skillPoints, inventory, score }: PlayerStatusProps) {
+export function PlayerStatus({ hp, skillPoints, inventory, score, questTitle, questObjective }: PlayerStatusProps) {
   return (
     <Card className="bg-secondary/40 border-primary/20 backdrop-blur-sm sticky top-4">
       <CardHeader>
@@ -41,6 +44,16 @@ export function PlayerStatus({ hp, skillPoints, inventory, score }: PlayerStatus
           <div>
             <p className="font-semibold">Hành trang</p>
             <p className="text-sm text-muted-foreground italic">{inventory}</p>
+          </div>
+        </div>
+        
+        <Separator className="bg-primary/20" />
+
+        <div className="flex items-start gap-3">
+          <ScrollText className="w-5 h-5 text-yellow-500 mt-1" />
+           <div>
+            <p className="font-semibold text-yellow-400">{questTitle}</p>
+            <p className="text-sm text-muted-foreground">{questObjective}</p>
           </div>
         </div>
       </CardContent>

@@ -21,7 +21,7 @@ export async function startAdventure(data: { prompt: string }) {
         
     const imageResult = await generateSceneImage({ sceneDescription });
 
-    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl };
+    return { success: true, sceneDescription, imageUrl: imageResult.imageUrl, questTitle: result.questTitle, questObjective: result.questObjective };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return { success: false, error: fromZodError(error).toString() };
@@ -38,6 +38,8 @@ const progressAdventureSchema = z.object({
   hp: z.number(),
   skillPoints: z.number(),
   score: z.number(),
+  questTitle: z.string(),
+  questObjective: z.string(),
 });
 
 export async function progressAdventure(data: {
@@ -47,6 +49,8 @@ export async function progressAdventure(data: {
   hp: number;
   skillPoints: number;
   score: number;
+  questTitle: string;
+  questObjective: string;
 }) {
   try {
     const validatedData = progressAdventureSchema.parse(data);
