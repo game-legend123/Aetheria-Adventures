@@ -6,8 +6,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wand2 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Wand2, HelpCircle } from "lucide-react";
 
 const formSchema = z.object({
   prompt: z.string().min(10, "Mô tả của bạn cần ít nhất 10 ký tự.").max(500, "Mô tả không được vượt quá 500 ký tự."),
@@ -68,6 +68,18 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="flex-col items-start text-sm text-muted-foreground mt-4 p-4 border-t border-primary/10 rounded-b-lg bg-black/10">
+            <div className="flex items-center font-semibold mb-2 text-foreground/80">
+                <HelpCircle className="w-5 h-5 mr-2 text-accent" />
+                <span>Hướng dẫn cho người chơi mới</span>
+            </div>
+            <ul className="list-disc list-inside space-y-1 pl-2">
+                <li><strong className="text-foreground/90">Nhập vai tự do:</strong> Hãy mô tả bất kỳ hành động nào bạn muốn. Ví dụ: "Tôi rút kiếm và tấn công con quái vật" hoặc "Tôi cố gắng thuyết phục người lính gác cho tôi qua".</li>
+                <li><strong className="text-foreground/90">Kỹ năng là chìa khóa:</strong> Sử dụng các kỹ năng bạn được cấp sẽ tăng cơ hội thành công của hành động.</li>
+                <li><strong className="text-foreground/90">Sáng tạo được thưởng:</strong> Những hành động càng chi tiết, thông minh và sáng tạo sẽ càng nhận được nhiều điểm thưởng.</li>
+                <li><strong className="text-foreground/90">Hệ thống trợ giúp:</strong> Đừng quên trò chuyện với "Hệ thống" nếu bạn cần gợi ý, hồi máu, hoặc mua kỹ năng mới!</li>
+            </ul>
+        </CardFooter>
       </Card>
     </div>
   );
