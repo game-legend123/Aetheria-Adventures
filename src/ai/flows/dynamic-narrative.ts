@@ -90,7 +90,7 @@ NHIỆM VỤ CỦA BẠN:
 1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
 2.  **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
 3.  **Kiểm tra việc hoàn thành nhiệm vụ:** Dựa trên hành động và kết quả, xác định xem người chơi đã hoàn thành mục tiêu nhiệm vụ chưa. Nếu có, đặt questCompleted là true.
-4.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. Nếu thưởng điểm sáng tạo, hãy đề cập ngắn gọn trong mô tả (ví dụ: "Vì sự lanh lợi của bạn...").
+4.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. Hãy chia các đoạn văn dài thành các đoạn nhỏ hơn (cách nhau bằng dấu xuống dòng) để dễ đọc. Nếu thưởng điểm sáng tạo, hãy đề cập ngắn gọn trong mô tả (ví dụ: "Vì sự lanh lợi của bạn...").
 5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (bao gồm cả điểm hành động và điểm sáng tạo), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ. Đặt 'updatedSkills' thành giá trị của 'newSkills' nếu nhiệm vụ hoàn thành, nếu không thì giữ nguyên kỹ năng cũ.
 6.  **Tạo nhiệm vụ và kỹ năng mới:** Nếu questCompleted là true, hãy tạo ra một newQuestTitle, newQuestObjective, và newSkills hợp lý.
 7.  **Kiểm tra điều kiện kết thúc:** Nếu người chơi đã thắng hoặc thua, hãy đặt gameHasEnded và isVictory cho phù hợp.

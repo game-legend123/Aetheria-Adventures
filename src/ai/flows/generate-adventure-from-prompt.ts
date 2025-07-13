@@ -37,7 +37,7 @@ const prompt = ai.definePrompt({
 Lời nhắc của người dùng: {{{prompt}}}
 
 Nhiệm vụ của bạn:
-1.  **Tạo cảnh mở đầu:** Dựa trên lời nhắc, hãy viết một đoạn văn mở đầu hấp dẫn. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi và đưa ra tình huống ban đầu.
+1.  **Tạo cảnh mở đầu:** Dựa trên lời nhắc, hãy viết một đoạn văn mở đầu hấp dẫn. Đoạn văn này phải thiết lập bối cảnh, giới thiệu nhân vật người chơi và đưa ra tình huống ban đầu. Hãy chia các đoạn văn dài thành các đoạn nhỏ hơn (cách nhau bằng dấu xuống dòng) để dễ đọc.
 2.  **Tạo nhiệm vụ đầu tiên:** Từ cảnh mở đầu, hãy tạo ra một nhiệm vụ đầu tiên cho người chơi. Nhiệm vụ này phải có một 'questTitle' (tiêu đề) và một 'questObjective' (mục tiêu) rõ ràng, có thể thực hiện được.
 3.  **Cung cấp kỹ năng ban đầu:** Tạo một danh sách các kỹ năng ban đầu (dạng chuỗi, phân tách bằng dấu phẩy) phù hợp với nhiệm vụ và nhân vật. Ví dụ: "Thuyết phục, Điều tra, Cảm nhận động cơ".
 4.  **Tích hợp vào câu chuyện:** Mô tả ngắn gọn nhiệm vụ này trong 'adventureText' để người chơi biết họ cần làm gì.
