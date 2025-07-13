@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from "react";
+import Image from 'next/image';
 import { useToast } from "@/hooks/use-toast";
 import { startAdventure, progressAdventure } from "@/app/actions";
 import { PlayerStatus } from "@/components/game/player-status";
@@ -22,6 +23,8 @@ export default function HomePage() {
   const [hp, setHp] = useState(100);
   const [skillPoints, setSkillPoints] = useState(10);
   const [inventory, setInventory] = useState("A tattered map and a piece of bread.");
+  const [score, setScore] = useState(0);
+  const [sceneImageUrl, setSceneImageUrl] = useState<string | null>(null);
   
   const { toast } = useToast();
   const lastSceneRef = useRef("");
@@ -37,6 +40,7 @@ export default function HomePage() {
       setChoices(result.choices);
       lastSceneRef.current = result.sceneDescription;
       currentChoicesRef.current = result.choices;
+      setSceneImageUrl(result.imageUrl || null);
       setGameState("playing");
     } else {
       toast({
@@ -53,6 +57,7 @@ export default function HomePage() {
     setGameState("loading");
     setMessages(prev => [...prev, { sender: "player", text: choice }]);
     setChoices([]);
+    setSceneImageUrl(null);
 
     const result = await progressAdventure({
       previousScene: lastSceneRef.current,
@@ -60,6 +65,7 @@ export default function HomePage() {
       inventory,
       hp,
       skillPoints,
+      score,
     });
 
     if (result.success && result.sceneDescription && result.actionChoices) {
@@ -68,6 +74,8 @@ export default function HomePage() {
       setHp(result.updatedHp!);
       setSkillPoints(result.updatedSkillPoints!);
       setInventory(result.updatedInventory!);
+      setScore(result.updatedScore!);
+      setSceneImageUrl(result.imageUrl || null);
       lastSceneRef.current = result.sceneDescription;
       currentChoicesRef.current = result.actionChoices;
       setGameState("playing");
@@ -79,6 +87,7 @@ export default function HomePage() {
       });
       setMessages(prev => prev.slice(0, -1)); // remove player's choice message
       setChoices(currentChoicesRef.current); // restore previous choices
+      setSceneImageUrl(null); // Or restore previous image if you store it
       setGameState("playing");
     }
   };
@@ -88,15 +97,22 @@ export default function HomePage() {
   }
   
   return (
-    <main className="relative h-screen overflow-hidden bg-cover bg-center bg-no-repeat" style={{backgroundImage: "url('https://placehold.co/1920x1080.png')", backgroundAttachment: 'fixed'}} data-ai-hint="fantasy landscape">
+    <main className="relative h-screen overflow-hidden bg-cover bg-center bg-no-repeat" style={{backgroundImage: "url('/background.jpg')"}} data-ai-hint="fantasy landscape">
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
         <div className="relative grid md:grid-cols-[1fr_320px] lg:grid-cols-[1fr_400px] h-screen gap-4 p-4">
             <div className="flex flex-col h-full max-h-screen">
+                {sceneImageUrl ? (
+                    <Image src={sceneImageUrl} alt="Current scene" width={800} height={450} className="w-full h-1/3 object-cover rounded-lg border-2 border-primary/50 shadow-lg mb-4" />
+                ) : (
+                    <div className="w-full h-1/3 bg-black/30 rounded-lg border-2 border-primary/50 shadow-lg mb-4 flex items-center justify-center">
+                      <p className="text-muted-foreground">Generating scene image...</p>
+                    </div>
+                )}
                 <AdventureLog messages={messages} isLoading={gameState === 'loading'} />
                 <ActionChoices choices={choices} onChoice={handlePlayerChoice} isLoading={gameState === 'loading'} />
             </div>
             <div className="hidden md:block h-full overflow-y-auto pr-2">
-                <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} />
+                <PlayerStatus hp={hp} skillPoints={skillPoints} inventory={inventory} score={score} />
             </div>
         </div>
     </main>

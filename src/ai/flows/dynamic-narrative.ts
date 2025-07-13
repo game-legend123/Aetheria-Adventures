@@ -19,6 +19,7 @@ const GenerateNextSceneInputSchema = z.object({
   inventory: z.string().describe('The current player inventory.'),
   hp: z.number().describe('The current player health points.'),
   skillPoints: z.number().describe('The current player skill points.'),
+  score: z.number().describe('The current player score.'),
 });
 export type GenerateNextSceneInput = z.infer<typeof GenerateNextSceneInputSchema>;
 
@@ -28,6 +29,7 @@ const GenerateNextSceneOutputSchema = z.object({
   updatedInventory: z.string().describe('The updated player inventory.'),
   updatedHp: z.number().describe('The updated player health points.'),
   updatedSkillPoints: z.number().describe('The updated player skill points.'),
+  updatedScore: z.number().describe('The updated player score after the recent action.'),
 });
 export type GenerateNextSceneOutput = z.infer<typeof GenerateNextSceneOutputSchema>;
 
@@ -46,14 +48,16 @@ const prompt = ai.definePrompt({
   Current Inventory: {{{inventory}}}
   Current HP: {{{hp}}}
   Current Skill Points: {{{skillPoints}}}
+  Current Score: {{{score}}}
 
   Based on the player's previous scene, their choice, and their current stats, generate the next scene description and 3-4 possible action choices.
-  Also determine the consequences of that action and update the player's inventory, hp, and skill points.
+  Also determine the consequences of that action and update the player's inventory, hp, skill points and score.
+  Award 10 points for a successful or clever action. Award 5 points for a neutral outcome. Do not award points for a negative outcome.
 
   Ensure that the scene description is engaging and sets the stage for the next set of choices.  The game is called Aetheria Adventures, and is set in the magical continent of Aetheria, filled with magic, monsters and ancient treasure.
   The player is on a mission to defeat the Shadow Lord and recover the Heart of Dawn.
   The available action choices should be clear and distinct, offering different paths for the player to take. Make the action choices adventurous and suited to the situation presented in the Scene Description.
-  Each element of the output should be a string, except for the updatedHp and updatedSkillPoints, which should be numerical.
+  Each element of the output should be a string, except for the updatedHp, updatedSkillPoints and updatedScore, which should be numerical.
   Updated inventory should reflect the items the player has based on their actions. Only change it if something happens in the scene that affects the player's inventory.
   If the scene involves combat, be sure to describe the results of the combat in the sceneDescription, and update the player's HP accordingly.
   The game uses a turn-based combat system. Assume a rock-paper-scissors system for simplicity.
@@ -64,6 +68,7 @@ const prompt = ai.definePrompt({
   Updated Inventory: [A description of the player's updated inventory, if applicable]
   Updated HP: [The player's updated health points]
   Updated Skill Points: [The player's updated skill points]
+  Updated Score: [The player's updated score]
 
   Output:
   `,

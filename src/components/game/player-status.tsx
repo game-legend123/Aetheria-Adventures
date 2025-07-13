@@ -1,14 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Heart, Sparkles, Backpack } from "lucide-react";
+import { Heart, Sparkles, Backpack, Star } from "lucide-react";
 
 type PlayerStatusProps = {
   hp: number;
   skillPoints: number;
   inventory: string;
+  score: number;
 };
 
-export function PlayerStatus({ hp, skillPoints, inventory }: PlayerStatusProps) {
+export function PlayerStatus({ hp, skillPoints, inventory, score }: PlayerStatusProps) {
   return (
     <Card className="bg-secondary/40 border-primary/20 backdrop-blur-sm sticky top-4">
       <CardHeader>
@@ -29,6 +30,11 @@ export function PlayerStatus({ hp, skillPoints, inventory }: PlayerStatusProps) 
           <Sparkles className="w-5 h-5 text-accent" />
           <p className="font-semibold">Skill Points</p>
           <span className="font-bold text-lg ml-auto">{skillPoints}</span>
+        </div>
+         <div className="flex items-center gap-3">
+          <Star className="w-5 h-5 text-yellow-400" />
+          <p className="font-semibold">Score</p>
+          <span className="font-bold text-lg ml-auto">{score}</span>
         </div>
         <div className="flex items-start gap-3">
           <Backpack className="w-5 h-5 text-muted-foreground mt-1" />
