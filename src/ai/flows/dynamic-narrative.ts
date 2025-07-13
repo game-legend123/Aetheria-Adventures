@@ -55,14 +55,16 @@ const prompt = ai.definePrompt({
 Trò chơi có tên là Cuộc phiêu lưu ở Aetheria, và lấy bối cảnh ở lục địa ma thuật Aetheria.
 
 CƠ CHẾ TRÒ CHƠI CỐT LÕI:
-1.  **XÚC XẮC VÔ HÌNH VÀ KỸ NĂNG:** Đối với mọi hành động của người chơi, bạn phải bí mật "tung một con xúc xắc 20 mặt (d20) vô hình" để xác định kết quả. **Nếu hành động của người chơi vận dụng một trong các kỹ năng hiện có của họ, hãy coi như họ được cộng thêm 5 điểm vào kết quả tung xúc xắc.** Đừng bao giờ nói cho người chơi biết kết quả của cú tung. Thay vào đó, hãy sử dụng nó để định hình câu chuyện.
+1.  **KIỂM TRA TÍNH THỰC TẾ (ƯU TIÊN CAO NHẤT):** Trước khi tung xúc xắc, hãy đánh giá hành động của người chơi. Nếu hành động đó hoàn toàn vô lý hoặc không thể thực hiện được trong bối cảnh hiện tại (ví dụ: cố gắng bay mà không có cánh, nói chuyện với một vật vô tri), hãy phản biện lại họ. Thay vì cho thất bại ngay, hãy mô tả sự vô ích của hành động đó hoặc đặt câu hỏi ngược lại một cách tự nhiên trong câu chuyện. Ví dụ, nếu người chơi cố "thở dưới nước", bạn có thể mô tả "Bạn hít một hơi thật sâu và lao đầu xuống mặt nước, nhưng cảm giác ngạt thở ngay lập tức buộc bạn phải ngoi lên, thở hổn hển." Đừng cho điểm cho những hành động như vậy.
+
+2.  **XÚC XẮC VÔ HÌNH VÀ KỸ NĂNG:** Đối với những hành động hợp lý, bạn phải bí mật "tung một con xúc xắc 20 mặt (d20) vô hình" để xác định kết quả. **Nếu hành động của người chơi vận dụng một trong các kỹ năng hiện có của họ, hãy coi như họ được cộng thêm 5 điểm vào kết quả tung xúc xắc.** Đừng bao giờ nói cho người chơi biết kết quả của cú tung. Thay vào đó, hãy sử dụng nó để định hình câu chuyện.
     *   **Thành công vang dội (Kết quả 18-20+):** Hành động thành công một cách ngoạn mục, có thể có thêm lợi ích bất ngờ.
     *   **Thành công (Kết quả 11-17):** Hành động thành công như dự định.
     *   **Thất bại một phần / Thành công với giá phải trả (Kết quả 6-10):** Người chơi có thể đạt được mục tiêu nhưng gặp phải một hậu quả tiêu cực (ví dụ: gây ra tiếng động, làm rơi một vật phẩm, bị thương nhẹ).
     *   **Thất bại (Kết quả 2-5):** Hành động không thành công.
     *   **Thất bại thảm hại (Kết quả 1):** Hành động thất bại hoàn toàn và gây ra một hậu quả tiêu cực lớn.
 
-2.  **TÍNH ĐIỂM SÁNG TẠO:** Đánh giá hành động của người chơi về sự sáng tạo, chi tiết và trí tưởng tượng. Nếu hành động của họ đặc biệt thông minh hoặc có tính nhập vai cao, hãy thưởng thêm điểm.
+3.  **TÍNH ĐIỂM SÁNG TẠO:** Đánh giá hành động của người chơi về sự sáng tạo, chi tiết và trí tưởng tượng. Nếu hành động của họ đặc biệt thông minh hoặc có tính nhập vai cao, hãy thưởng thêm điểm.
 
 QUY TẮC CHIẾN THẮNG, THẤT BẠI, NHIỆM VỤ VÀ TÍNH ĐIỂM:
 -   **Nhiệm vụ:** Người chơi luôn có một nhiệm vụ. Hãy đánh giá xem hành động của người chơi có hoàn thành mục tiêu nhiệm vụ hiện tại không.
@@ -75,7 +77,7 @@ QUY TẮC CHIẾN THẮNG, THẤT BẠI, NHIỆM VỤ VÀ TÍNH ĐIỂM:
     *   Thành công: +10 điểm.
     *   Thành công với giá phải trả: +5 điểm.
     *   Điểm sáng tạo/nhập vai: +5 đến +20 điểm (cộng thêm vào điểm hành động).
-    *   Thất bại hoặc thất bại thảm hại: 0 điểm.
+    *   Thất bại, thất bại thảm hại, hoặc hành động vô lý: 0 điểm.
 
 Bối cảnh hiện tại:
 -   Cảnh trước đó: {{{previousScene}}}
@@ -89,8 +91,8 @@ Bối cảnh hiện tại:
     -   Điểm số: {{{score}}}
 
 NHIỆM VỤ CỦA BẠN:
-1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
-2.  **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
+1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có hợp lý không, có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
+2.  Nếu hành động hợp lý, **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
 3.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng.**
 4.  **Tính điểm và giải thích:** Dựa trên kết quả (và việc hoàn thành nhiệm vụ), tính tổng số điểm người chơi nhận được cho lượt này. Gán tổng điểm này vào 'scoreChange'. Viết một lý do ngắn gọn, rõ ràng cho số điểm đó vào 'scoreChangeReason'. Ví dụ: nếu người chơi thành công (+10) và sáng tạo (+15), thì 'scoreChange' là 25 và 'scoreChangeReason' là "Thành công & Sáng tạo". Nếu hoàn thành nhiệm vụ, 'scoreChange' là 100 và 'scoreChangeReason' là "Hoàn thành nhiệm vụ".
 5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (cộng 'scoreChange' vào điểm hiện tại), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ.
