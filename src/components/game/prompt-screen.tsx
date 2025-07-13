@@ -24,7 +24,7 @@ export function PromptScreen({ onStartAdventure, isLoading }: PromptScreenProps)
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      prompt: "Một đạo tặc trẻ tuổi trong một thành phố cảng nhộn nhịp, tìm kiếm một bản đồ kho báu huyền thoại.",
+      prompt: "Một nhà thám hiểm đang tìm kiếm một thương gia bí ẩn tên là Silas, người được cho là đang sở hữu một món đồ cổ có sức mạnh to lớn.",
     },
   });
 

@@ -26,7 +26,7 @@ export default function HomePage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [hp, setHp] = useState(100);
   const [skillPoints, setSkillPoints] = useState(10);
-  const [inventory, setInventory] = useState("Một tấm bản đồ rách và một mẩu bánh mì.");
+  const [inventory, setInventory] = useState("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
   const [score, setScore] = useState(0);
   const [sceneImageUrl, setSceneImageUrl] = useState<string | null>(null);
   const [isVictory, setIsVictory] = useState(false);
@@ -50,7 +50,7 @@ export default function HomePage() {
     setHp(100);
     setScore(0);
     setSkillPoints(10);
-    setInventory("Một tấm bản đồ rách và một mẩu bánh mì.");
+    setInventory("Một chiếc áo choàng cũ, một con dao găm và vài đồng xu.");
     setSceneImageUrl(null);
     setIsVictory(false);
     setQuestTitle("");
