@@ -117,9 +117,13 @@ const generateNextSceneFlow = ai.defineFlow(
     }
   
     const {output} = await prompt(input);
+    
+    // The prompt handles adding score for successful actions.
+    // We add the quest completion bonus here.
     if(output!.questCompleted) {
         output!.updatedScore += 100;
     }
+
     return output!;
   }
 );

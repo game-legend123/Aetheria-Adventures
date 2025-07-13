@@ -77,6 +77,8 @@ export default function HomePage() {
     setMessages(prev => [...prev, { sender: "player", text: choice }]);
     setSceneImageUrl(null);
 
+    const currentQuestTitle = questTitle;
+
     const result = await progressAdventure({
       previousScene: lastSceneRef.current,
       playerChoice: choice,
@@ -92,7 +94,7 @@ export default function HomePage() {
       const newMessages: Message[] = [...messages, { sender: "player", text: choice }];
       
       if (result.questCompleted) {
-        newMessages.push({ sender: "system", text: `Nhiệm vụ hoàn thành: ${questTitle} (+100 Điểm)` });
+        newMessages.push({ sender: "system", text: `Nhiệm vụ hoàn thành: ${currentQuestTitle} (+100 Điểm)` });
       }
 
       newMessages.push({ sender: "bot", text: result.sceneDescription });
