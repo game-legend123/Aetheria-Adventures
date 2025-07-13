@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRight, Bot, User, Wand2 } from 'lucide-react';
+import { ArrowRight, Bot, User, Wand2, Heart } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 
 type ChatMessage = {
     sender: 'user' | 'system';
@@ -63,6 +65,13 @@ export function SystemChat({ isOpen, onClose, onSendMessage }: SystemChatProps) 
                         Nói chuyện với Quản trò để thay đổi hướng đi của câu chuyện, hỏi thông tin, hoặc trao đổi tài nguyên.
                     </DialogDescription>
                 </DialogHeader>
+                 <Alert variant="destructive" className="border-destructive/30 bg-destructive/10 text-destructive-foreground">
+                    <Heart className="h-4 w-4 !text-destructive" />
+                    <AlertTitle>Cảnh báo</AlertTitle>
+                    <AlertDescription>
+                        Mỗi tin nhắn gửi đến Hệ thống sẽ tiêu tốn 5 Máu của bạn.
+                    </AlertDescription>
+                </Alert>
                 <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 border rounded-md my-4 bg-background/50">
                      <div className="space-y-4">
                         {messages.map((message, index) => (

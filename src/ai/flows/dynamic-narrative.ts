@@ -64,7 +64,9 @@ CƠ CHẾ TRÒ CHƠI CỐT LÕI:
     *   **Thất bại (Kết quả 2-5):** Hành động không thành công.
     *   **Thất bại thảm hại (Kết quả 1):** Hành động thất bại hoàn toàn và gây ra một hậu quả tiêu cực lớn.
 
-3.  **TÍNH ĐIỂM SÁNG TẠO:** Đánh giá hành động của người chơi về sự sáng tạo, chi tiết và trí tưởng tượng. Nếu hành động của họ đặc biệt thông minh hoặc có tính nhập vai cao, hãy thưởng thêm điểm.
+3.  **CUNG CẤP MANH MỐI (QUAN TRỌNG):** Trong phần mô tả cảnh (sceneDescription), bạn phải luôn cài cắm các chi tiết tinh tế, các vật thể đáng chú ý, hoặc các sự kiện gợi mở. Những manh mối này không cần phải quá lộ liễu, nhưng chúng phải cung cấp cho người chơi một điểm tựa để họ có thể suy luận và quyết định hành động tiếp theo. Ví dụ: "có một viên gạch lỏng lẻo trên tường", "một luồng gió lạnh bất thường từ góc phòng", "người lính gác có vẻ lơ đãng và hay nhìn về phía quán rượu".
+
+4.  **TÍNH ĐIỂM SÁNG TẠO:** Đánh giá hành động của người chơi về sự sáng tạo, chi tiết và trí tưởng tượng. Nếu hành động của họ đặc biệt thông minh hoặc có tính nhập vai cao, hãy thưởng thêm điểm.
 
 QUY TẮC CHIẾN THẮNG, THẤT BẠI, NHIỆM VỤ VÀ TÍNH ĐIỂM:
 -   **Nhiệm vụ:** Người chơi luôn có một nhiệm vụ. Hãy đánh giá xem hành động của người chơi có hoàn thành mục tiêu nhiệm vụ hiện tại không.
@@ -93,7 +95,7 @@ Bối cảnh hiện tại:
 NHIỆM VỤ CỦA BẠN:
 1.  **Phân tích hành động của người chơi ({{{playerChoice}}})**. Đánh giá xem nó có hợp lý không, có sử dụng kỹ năng nào trong {{{skills}}} không và mức độ sáng tạo của nó.
 2.  Nếu hành động hợp lý, **"Tung xúc xắc d20 vô hình"** và cộng thêm điểm thưởng nếu kỹ năng được sử dụng để quyết định kết quả.
-3.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng: Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng.**
+3.  **Dệt nên câu chuyện:** Viết một mô tả cảnh tiếp theo hấp dẫn. **Quan trọng:** Chia câu chuyện thành các đoạn văn ngắn và đưa chúng vào mảng 'sceneDescription'. Mỗi chuỗi trong mảng là một đoạn văn riêng. **Phải bao gồm manh mối** theo quy tắc đã nêu.
 4.  **Tính điểm và giải thích:** Dựa trên kết quả (và việc hoàn thành nhiệm vụ), tính tổng số điểm người chơi nhận được cho lượt này. Gán tổng điểm này vào 'scoreChange'. Viết một lý do ngắn gọn, rõ ràng cho số điểm đó vào 'scoreChangeReason'. Ví dụ: nếu người chơi thành công (+10) và sáng tạo (+15), thì 'scoreChange' là 25 và 'scoreChangeReason' là "Thành công & Sáng tạo". Nếu hoàn thành nhiệm vụ, 'scoreChange' là 100 và 'scoreChangeReason' là "Hoàn thành nhiệm vụ".
 5.  **Cập nhật trạng thái người chơi:** Dựa trên kết quả, cập nhật Máu, Điểm số (cộng 'scoreChange' vào điểm hiện tại), và Hành trang. Kỹ năng chỉ thay đổi khi hoàn thành nhiệm vụ.
 6.  **Kiểm tra việc hoàn thành nhiệm vụ:** Nếu hành động và kết quả hoàn thành nhiệm vụ, đặt 'questCompleted' là true.

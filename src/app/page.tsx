@@ -151,9 +151,24 @@ export default function HomePage() {
   }
 
   const handleSystemChat = async (message: string) => {
+     // Apply HP cost for using the system
+    const newHp = hp - 5;
+    if (newHp <= 0) {
+        setHp(0);
+        setGameState("gameover");
+        setIsVictory(false);
+        return "Bạn đã kiệt sức vì thay đổi thực tại. Trò chơi kết thúc.";
+    }
+    setHp(newHp);
+    toast({
+        variant: "destructive",
+        title: "Can thiệp vào thực tại",
+        description: "Bạn đã dùng 5 Máu để nói chuyện với Hệ thống.",
+    });
+
     const result = await chatWithSystem({
       userMessage: message,
-      hp,
+      hp: newHp, // Send updated HP to the system
       skills,
       inventory,
       score,
@@ -192,7 +207,7 @@ export default function HomePage() {
           setGameState("playing"); // Or prompt
         }
 
-      // Handle normal state updates
+      // Handle normal state updates from trades, etc.
       } else if (result.stateUpdates) {
         setHp(result.stateUpdates.hp);
         setSkills(result.stateUpdates.skills);
