@@ -1,6 +1,6 @@
 
 # Cuộc phiêu lưu ở Aetheria
-
+Link vào chơi :https://aetheria-adventures.vercel.app/
 **Một Game Nhập Vai Phiêu Lưu Bằng Chữ Do AI Điều Khiển**
 
 Chào mừng bạn đến với Aetheria, một thế giới ma thuật nơi mọi quyết định của bạn đều định hình nên số phận. Đây không phải là một trò chơi thông thường với những lựa chọn có sẵn. Tại đây, bạn là người viết nên câu chuyện của chính mình. Hãy mô tả hành động, nói lên suy nghĩ, và một Quản trò AI (Game Master) thông minh sẽ dệt nên một cuộc phiêu lưu độc nhất dành riêng cho bạn.
